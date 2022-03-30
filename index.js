@@ -24,7 +24,13 @@ const server = http.createServer(app).listen(port, function(err){
     };
 });
 
-const io = new socket.Server(server);
+const io = new socket.Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+    }
+});
+
 const storage = {};
 
 io.on('connection',(socket)=>{
