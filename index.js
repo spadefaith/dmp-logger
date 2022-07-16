@@ -52,6 +52,15 @@ app.post('/send',function(req, res, next){
     }
 });
 
+app.get('/activate/room/:nsp', function(req, res, next){
+    const nsp = req.params.nsp;
+    io.of(nsp).on('connection',(socket)=>{
+        socket.emit('message', {message:`tes connected to socket server with id ${socket.id}`});
+        
+    });
+    res.json({message:'activated'});
+});
+
 app.use('/room/:nsp', async function(req, res, next){
     const nsp = req.params.nsp;
     const template = path.join(__dirname,'./public/index.ejs');
