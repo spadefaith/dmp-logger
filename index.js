@@ -65,6 +65,7 @@ app.get('/activate/room/:nsp', function(req, res, next){
     res.json({message:'activated'});
 });
 
+
 app.use('/room/:nsp', async function(req, res, next){
     const nsp = req.params.nsp;
     const template = path.join(__dirname,'./public/index.ejs');
