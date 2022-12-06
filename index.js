@@ -14,8 +14,6 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(cors());
 
-
-
 const server = http.createServer(app).listen(port, function(err){
     if(err){
         console.error(err);
