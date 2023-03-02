@@ -12,7 +12,11 @@ const app = express();
 
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin:function(origin, callback){
+        callback(null, true)
+    }
+}));
 
 const server = http.createServer(app).listen(port, function(err){
     if(err){
@@ -52,7 +56,7 @@ app.post('/send',function(req, res, next){
 
 app.get('/activate/room/:nsp', function(req, res, next){
     const nsp = req.params.nsp;
-    
+
     if(!storage[nsp]){
         io.of(nsp).on('connection',(socket)=>{
             socket.emit('message', {message:`tes connected to socket server with id ${socket.id}`});
@@ -72,6 +76,8 @@ app.use('/room/:nsp', async function(req, res, next){
      * 2. 
      */
 
+    const action = req.query.action || null;
+    
     if(!storage[nsp]){
         io.of(nsp).on('connection',(socket)=>{
             socket.emit('message', {message:`tes connected to socket server with id ${socket.id}`});
@@ -81,9 +87,37 @@ app.use('/room/:nsp', async function(req, res, next){
     };
     
     const html = await ejs.renderFile(template, {
-        nsp:nsp,        
+        nsp:nsp,      
+        action  
     });
     res.send(html);
+});
+
+
+app.get('/allocate/:nsp', async function(req, res, next){
+    const nsp = req.params.nsp;
+    // const template = path.join(__dirname,'./public/index.ejs');
+    /**
+     * 1. get all users;
+     * 2. 
+     */
+
+    // const action = req.query.action || null;
+    
+    if(!storage[nsp]){
+        io.of(nsp).on('connection',(socket)=>{
+            socket.emit('message', {message:`tes connected to socket server with id ${socket.id}`});
+            
+        });
+        storage[nsp] = true;
+    };
+    
+    // const html = await ejs.renderFile(template, {
+    //     nsp:nsp,      
+    //     action  
+    // });
+    // res.send(html);
+    res.json({status:1,message:'allocated'});
 });
 
 app.use('/', function(req, res, next){
