@@ -44,6 +44,8 @@ io.on('connection',(socket)=>{
 app.post('/send',function(req, res, next){
     const nsp = req.query.nsp;
     const body = req.body;
+    console.log(47,nsp)
+    console.log(48,body)
     if(nsp){
         io.of(nsp).emit('message', body);
         // io.emit('message', body);
